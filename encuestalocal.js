@@ -3,6 +3,7 @@
 // vtamara@pasosdeJesus.org 2014
 // vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker fileencoding=utf-8:
 
+// Ideas: http://www.ibm.com/developerworks/web/library/wa-offlinehtml/index.html?ca=drs
 
 $(document).ready(function() {
     var muere = function (m) {
