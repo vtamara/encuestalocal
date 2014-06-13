@@ -26,6 +26,10 @@ if (test -d "${a}_files") then {
 	cp ${a}.html /tmp/${a}.html.archivos
 	sed -e "s/_files/_archivos/g" /tmp/${a}.html.archivos > ${a}.html
 } fi;
+if (test ! -d "${a}_archivos") then {
+	echo "Falta ${a}_archivos";
+	exit 1;
+} fi;
 if (test ! -f "${a}_archivos/jquery-2.1.1.min.js") then {
 	echo "Copiando jquery";
 	(cd ${a}_archivos; ftp "http://code.jquery.com/jquery-2.1.1.min.js")
