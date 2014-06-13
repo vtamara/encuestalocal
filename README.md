@@ -8,14 +8,19 @@ y envío cuando esté en línea.
 Hemos preparado encuestas en OpenBSD desde el interprete de comandos ksh, una vez preparada debe
 poderse usar con cualquier navegador que soporte IndexedDB.
 
- En directorio con fuentes de este convertidor
-* mkdir -p tmp/miencuesta
-* En navegador examine encuesta en modo de llenar y descarguela en 
+En directorio con fuentes de este convertidor
+
+1. mkdir -p tmp/miencuesta
+
+
+2. En navegador examine encuesta en modo de llenar y descarguela en 
     tmp/miencuesta --de forma que quede miencuesta.html y miencuesta_files
-* Ejecute: 
+
+3. Ejecute: 
     cd tmp/miencuesta
     ../../prep.sh miencuesta
-* Distribuya tmp/miencuesta para llenar la encuesta en computadores donde
+
+4. Distribuya tmp/miencuesta para llenar la encuesta en computadores donde
   lo requiere.
 
 
