@@ -133,15 +133,21 @@ $(document).ready(function() {
         }
     });
 
-    /* Ejemplo de entradas y correspondiente HTML
+    /* Ejemplo de entradas y correspondiente HTML en formularios de
+       Google Docs a Junio de 2014
+
+       Radio:
+       <input type="radio" name="entry.122063182" value="Mujer" id="group_122063182_1" role="radio" class="ss-q-radio" aria-label="Mujer">
+       <input type="radio" name="entry.122063182" value="Hombre" id="group_122063182_2" role="radio" class="ss-q-radio" aria-label="Hombre">
+
 
        Fecha:
-       entry.2092848773=2014-06-16
        <input type="date" name="entry.2092848773" value="" class="ss-q-date valid" dir="auto" id="entry_2092848773" aria-label="Fecha de diligenciamiento  "> 
+       entry.2092848773=2014-06-16
 
-       Texto:
-        entry.563383882.other_option_response=otra+7
+      ecTexto:
         <input type="text" name="entry.563383882.other_option_response" value="" class="ss-q-other" id="entry_563383882_other_option_response" dir="auto" aria-label="Other">
+        entry.563383882.other_option_response=otra+7
 
         */
     var presenta= function(contenido) {
