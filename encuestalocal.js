@@ -133,6 +133,17 @@ $(document).ready(function() {
         }
     });
 
+    /* Ejemplo de entradas y correspondiente HTML
+
+       Fecha:
+       entry.2092848773=2014-06-16
+       <input type="date" name="entry.2092848773" value="" class="ss-q-date valid" dir="auto" id="entry_2092848773" aria-label="Fecha de diligenciamiento  "> 
+
+       Texto:
+        entry.563383882.other_option_response=otra+7
+        <input type="text" name="entry.563383882.other_option_response" value="" class="ss-q-other" id="entry_563383882_other_option_response" dir="auto" aria-label="Other">
+
+        */
     var presenta= function(contenido) {
         // Limpiamos formulario
         limpia_formulario();
@@ -142,12 +153,15 @@ $(document).ready(function() {
         var obj = {}, p, idx;
         for (var i = 0, n = pairs.length; i < n; i++) {
             var p = pairs[i].split('=');
-            var ie = 'input:radio[name="' + p[0] + '"]';
-            if ($(ie).size() > 0) {
+            if ($('input:radio[name="' + p[0] + '"]').size() > 0) {
+                // Radio
                 $('input[name="' + p[0] + '"]').attr('checked', false);
-                var s='input[name="' + p[0] + '"][aria-label="'
+                var s='input[name="' + p[0] + '"][value="'
                     + p[1] + '"]';
                 $(s).attr('checked', true);
+            } else if ($('input[name="' + p[0] + '"]').size() == 1) {
+                // Texto o fecha
+                $('input[name="' + p[0] + '"]').val(p[1]);
             }
         }
         el_llena();
