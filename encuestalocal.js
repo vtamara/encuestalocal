@@ -128,7 +128,6 @@ $(document).ready(function() {
                     os.put(e.target.result);
                     el_llena();
                 }
-                alert('Por marcar como enviada');
             }
         }
     });
@@ -215,6 +214,7 @@ $(document).ready(function() {
             var req = encuesta.add(o);
             req.onsuccess = function(e) {
                 console.log("* Resultados agregados");
+                actual = null;
                 // Al llamarlo sin espera puede no hacer bien
                 // la cuenta de almacenados.
                 setTimeout(function() 

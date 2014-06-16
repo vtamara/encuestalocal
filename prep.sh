@@ -45,12 +45,19 @@ grep "${a}_archivos/jquery-2.1.1.min.js" ${a}.html > /dev/null
 if (test "$?" != "0") then {
 	echo "Introduciendo el uso de jquery en formulario";
 	cp ${a}.html /tmp/${a}.html.sinjquery
-	sed -e "s/<script type=\"text\/javascript\">/<script type=\"text\/javascript\" src=\"${a}_archivos\/jquery-2.1.1.min.js\"\><\/script> &/g" /tmp/${a}.html.sinjquery > ${a}.html
+	sed -e "s/<script type=\"text\/javascript\"> *$/<script type=\"text\/javascript\" src=\"${a}_archivos\/jquery-2.1.1.min.js\"\><\/script> &/g" /tmp/${a}.html.sinjquery > ${a}.html
 } fi;
 
 grep "${a}_archivos/encuestalocal.js" ${a}.html > /dev/null
 if (test "$?" != "0") then {
 	echo "Introduciendo el uso de encuestalocal en formulario";
 	cp ${a}.html /tmp/${a}.html.sinjs
-	sed -e "s/<script type=\"text\/javascript\">/<script type=\"text\/javascript\" src=\"${a}_archivos\/encuestalocal.js\"\/><\/script> &/g" /tmp/${a}.html.sinjs > ${a}.html
+	sed -e "s/<script type=\"text\/javascript\"> *$/<script type=\"text\/javascript\" src=\"${a}_archivos\/encuestalocal.js\"\/><\/script> &/g" /tmp/${a}.html.sinjs > ${a}.html
+} fi;
+
+grep "www.pasosdeJesus.org" ${a}.html > /dev/null
+if (test "$?" != "0") then {
+	echo "Créditos";
+	cp ${a}.html /tmp/${a}.html.sinpasos
+	sed -e "s/<div class=\"ss-logo-image\">/& Encuestalocal por <a href=\"https:\/\/www.pasosdeJesus.org\">Pasos de Jesús<\/a>/g" /tmp/${a}.html.sinpasos > ${a}.html
 } fi;
