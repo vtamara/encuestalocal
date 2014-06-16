@@ -106,6 +106,7 @@ $(document).ready(function() {
                 + "<p><button id='el_anterior'>Anterior</button>"
                 + "<span style='border: 1px solid #000000' id='el_idalm'>&nbsp;</span>"
                 + "<button id='el_siguiente'>Siguiente no enviada</button></p>"
+                + "<button id='el_resnoenviados'>Resultados no enviados</button>"
                 + "</div>");
         el_llena();
     }
@@ -128,7 +129,6 @@ $(document).ready(function() {
                     os.put(e.target.result);
                     el_llena();
                 }
-                alert('Por marcar como enviada');
             }
         }
     });
@@ -227,5 +227,40 @@ $(document).ready(function() {
                 console.log("* No pudo agregarse ", e.target.error.name);
             }
         }
+    });
+
+
+    $(document).on('click', '#el_resnoenviados', function(event) {
+        event.preventDefault();
+        if (bd != null) {
+            var nv = window.open();
+            var tr = bd.transaction([BD_NOMBRE_DEPOSITO], "readonly");
+            var req = tr.objectStore(BD_NOMBRE_DEPOSITO).openCursor();
+            var res ="<!DOCTYPE html>\n"
+                + "<html>\n"
+                + "  <head><title>Resultados de " 
+                + $('title').html() + "</title></head>\n"
+                + "  <body>\n";
+                + "    <table border=1>\n";
+            req.onsuccess = function(e) {
+                var cursor = e.target.result;
+                if (cursor) {
+                    ida = cursor.value['id'];
+                    if (cursor.value['enviado'] === false) {
+                        res += "<tr>";
+                        $('form').
+                        res += "</tr>";
+                    }
+                    cursor.continue();
+                }  else {
+                    res += "</table>\n"
+                        + "</body>\n"
+                        + "</html>\n";
+                    nv.document.write(res);
+                }
+            }
+
+        }
+
     });
 })
