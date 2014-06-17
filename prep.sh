@@ -53,6 +53,7 @@ if (test "$?" != "0") then {
 	echo "Introduciendo el uso de encuestalocal en formulario";
 	cp ${a}.html /tmp/${a}.html.sinjs
 	sed -e "s/<script type=\"text\/javascript\"> *$/<script type=\"text\/javascript\" src=\"${a}_archivos\/encuestalocal.js\"\/><\/script> &/g" /tmp/${a}.html.sinjs > ${a}.html
+<<<<<<< HEAD
 } fi;
 
 grep "www.pasosdeJesus.org" ${a}.html > /dev/null
@@ -60,4 +61,6 @@ if (test "$?" != "0") then {
 	echo "Créditos";
 	cp ${a}.html /tmp/${a}.html.sinpasos
 	sed -e "s/<div class=\"ss-logo-image\">/& Encuestalocal por <a href=\"https:\/\/www.pasosdeJesus.org\">Pasos de Jesús<\/a>/g" /tmp/${a}.html.sinpasos > ${a}.html
+=======
+>>>>>>> acee2da1406d4132e96919a1217d34fb5f2454e3
 } fi;

@@ -106,6 +106,7 @@ $(document).ready(function() {
                 + "<p><button id='el_anterior'>Anterior</button>"
                 + "<span style='border: 1px solid #000000' id='el_idalm'>&nbsp;</span>"
                 + "<button id='el_siguiente'>Siguiente no enviada</button></p>"
+                + "<button id='el_resnoenviados'>Resultados no enviados</button>"
                 + "</div>");
         el_llena();
     }
@@ -132,6 +133,23 @@ $(document).ready(function() {
         }
     });
 
+    /* Ejemplo de entradas y correspondiente HTML en formularios de
+       Google Docs a Junio de 2014
+
+       Radio:
+       <input type="radio" name="entry.122063182" value="Mujer" id="group_122063182_1" role="radio" class="ss-q-radio" aria-label="Mujer">
+       <input type="radio" name="entry.122063182" value="Hombre" id="group_122063182_2" role="radio" class="ss-q-radio" aria-label="Hombre">
+
+
+       Fecha:
+       <input type="date" name="entry.2092848773" value="" class="ss-q-date valid" dir="auto" id="entry_2092848773" aria-label="Fecha de diligenciamiento  "> 
+       entry.2092848773=2014-06-16
+
+      ecTexto:
+        <input type="text" name="entry.563383882.other_option_response" value="" class="ss-q-other" id="entry_563383882_other_option_response" dir="auto" aria-label="Other">
+        entry.563383882.other_option_response=otra+7
+
+        */
     var presenta= function(contenido) {
         // Limpiamos formulario
         limpia_formulario();
@@ -141,12 +159,15 @@ $(document).ready(function() {
         var obj = {}, p, idx;
         for (var i = 0, n = pairs.length; i < n; i++) {
             var p = pairs[i].split('=');
-            var ie = 'input:radio[name="' + p[0] + '"]';
-            if ($(ie).size() > 0) {
+            if ($('input:radio[name="' + p[0] + '"]').size() > 0) {
+                // Radio
                 $('input[name="' + p[0] + '"]').attr('checked', false);
-                var s='input[name="' + p[0] + '"][aria-label="'
+                var s='input[name="' + p[0] + '"][value="'
                     + p[1] + '"]';
                 $(s).attr('checked', true);
+            } else if ($('input[name="' + p[0] + '"]').size() == 1) {
+                // Texto o fecha
+                $('input[name="' + p[0] + '"]').val(p[1]);
             }
         }
         el_llena();
@@ -227,5 +248,40 @@ $(document).ready(function() {
                 console.log("* No pudo agregarse ", e.target.error.name);
             }
         }
+    });
+
+
+    $(document).on('click', '#el_resnoenviados', function(event) {
+        event.preventDefault();
+        if (bd != null) {
+            var nv = window.open();
+            var tr = bd.transaction([BD_NOMBRE_DEPOSITO], "readonly");
+            var req = tr.objectStore(BD_NOMBRE_DEPOSITO).openCursor();
+            var res ="<!DOCTYPE html>\n"
+                + "<html>\n"
+                + "  <head><title>Resultados de " 
+                + $('title').html() + "</title></head>\n"
+                + "  <body>\n";
+                + "    <table border=1>\n";
+            req.onsuccess = function(e) {
+                var cursor = e.target.result;
+                if (cursor) {
+                    ida = cursor.value['id'];
+                    if (cursor.value['enviado'] === false) {
+                        res += "<tr>";
+                        $('form').
+                        res += "</tr>";
+                    }
+                    cursor.continue();
+                }  else {
+                    res += "</table>\n"
+                        + "</body>\n"
+                        + "</html>\n";
+                    nv.document.write(res);
+                }
+            }
+
+        }
+
     });
 })
