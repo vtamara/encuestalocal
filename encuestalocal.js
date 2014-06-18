@@ -106,7 +106,7 @@ $(document).ready(function() {
                 + "<p><button id='el_anterior'>Anterior</button>"
                 + "<span style='border: 1px solid #000000' id='el_idalm'>&nbsp;</span>"
                 + "<button id='el_siguiente'>Siguiente no enviada</button></p>"
-                + "<button id='el_resnoenviados'>Resultados no enviados</button>"
+                + "<button id='el_resnoenviados'>Exportar resultados no enviados</button>"
                 + "</div>");
         el_llena();
     }
@@ -173,6 +173,42 @@ $(document).ready(function() {
         el_llena();
     };
 
+    /**
+     * Itera sobre cada resultado de contenido y
+     * por cada uno llama bien a la función fradio si es contenido
+     * tipo radio o a ftexto.
+     */
+    var itera_cont = function(contenido, param, fradio, ftexto) {
+        // Limpiamos formulario
+        //https://gist.github.com/brucekirkpatrick/7026682
+        var str = decodeURI(contenido.replace(/\+/g, ' ')); 
+        var pairs = str.split('&');
+        var obj = {}, p, idx;
+        for (var i = 0, n = pairs.length; i < n; i++) {
+            var p = pairs[i].split('=');
+            if ($('input:radio[name="' + p[0] + '"]').size() > 0) {
+                fradio(param, p[0], p[1]);
+            } else if ($('input[name="' + p[0] + '"]').size() == 1) {
+                ftexto(param, p[0], p[1]);
+            }
+        }
+    };
+
+    var fradio_llenaformulario = function(param, nombre, valor) {
+        $('input[name="' + nombre + '"]').attr('checked', false);
+        var s='input[name="' + nombre + '"][value="'
+            + valor + '"]';
+        $(s).attr('checked', true);
+    };
+
+    var ftexto_llenaformulario = function(param, nombre, valor) {
+        $('input[name="' + nombre + '"]').val(valor);
+    };
+
+    var fentrada_objeto = function(param, nombre, valor) {
+        param[nombre] = valor;
+    }
+
     // Google docs molesta al enviar con método post (pero al parece funciona).
     $(document).on('click', '#el_anterior', function(event) {
         event.preventDefault();
@@ -189,7 +225,11 @@ $(document).ready(function() {
                         if (ida == actual && anterior != null) {
                             actual = anterior;
                             rec = true;
-                            presenta(contanterior);
+                            limpia_formulario();
+                            itera_cont(contanterior, null, 
+                                fradio_llenaformulario,
+                                ftexto_llenaformulario);
+                            el_llena();
                         } else if (ida < actual) {
                             contanterior = cursor.value['contenido'];
                             anterior = ida;
@@ -216,7 +256,12 @@ $(document).ready(function() {
                         (actual == null || ida > actual)) {
                         actual = ida;
                         rec = true;
-                        presenta(cursor.value['contenido']);
+                        //presenta(cursor.value['contenido']);
+                        limpia_formulario();
+                        itera_cont(cursor.value['contenido'], null,
+                            fradio_llenaformulario,
+                            ftexto_llenaformulario);
+                        el_llena();
                     }
                     cursor.continue();
                 } 
@@ -229,9 +274,15 @@ $(document).ready(function() {
         if (bd != null) {
             var tx = bd.transaction([BD_NOMBRE_DEPOSITO], "readwrite");
             var encuesta = tx.objectStore(BD_NOMBRE_DEPOSITO);
+            var h = new Date();
             var o = {enviado: false, 
                 contenido: $('form').serialize(), 
-                url: $('form').attr('action')};
+                url: $('form').attr('action'),
+                // Timestamp en locale usado por googledocs
+                timestamp: (h.getMonth()+1) + "-" + h.getDate() + "-" + 
+                    h.getFullYear() + " " + h.getHours() + ":" + 
+                    h.getMinutes() + ":" + h.getSeconds()
+            };
             var req = encuesta.add(o);
             req.onsuccess = function(e) {
                 console.log("* Resultados agregados");
@@ -261,15 +312,39 @@ $(document).ready(function() {
                 + "<html>\n"
                 + "  <head><title>Resultados de " 
                 + $('title').html() + "</title></head>\n"
-                + "  <body>\n";
-                + "    <table border=1>\n";
+                + "  <body>\n"
+                + "    <table border=1>\n"
+                + "      <thead>";
+            tit = {};
+            $('input[name^="entry"').each(function (index) {
+                if ($(this).attr('type') == 'radio') {
+                    tit[$(this).attr('name')] = $(this).closest('.ss-choices').attr('aria-label').trim();
+                } else {
+                    tit[$(this).attr('name')] = $(this).closest('.ss-q-title').text().trim();
+                }
+            });
+            res += "<th>Timestamp</th>";
+            for(var k in tit) {
+                res += "<th>" + tit[k] + "</th>";
+            }
             req.onsuccess = function(e) {
                 var cursor = e.target.result;
                 if (cursor) {
                     ida = cursor.value['id'];
                     if (cursor.value['enviado'] === false) {
                         res += "<tr>";
-                        $('form').
+                        ind = {};
+                        itera_cont(cursor.value['contenido'], ind, 
+                                fentrada_objeto, fentrada_objeto);
+                
+                        res += "<td>" + cursor.value['timestamp'] + "</td>";
+                        for(var k in tit) {
+                            res += "<td>";
+                            if (k in ind) {
+                                res += ind[k];
+                            }
+                            res += "</td>";
+                        };
                         res += "</tr>";
                     }
                     cursor.continue();
