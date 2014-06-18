@@ -103,10 +103,10 @@ $(document).ready(function() {
                 + "<p>&nbsp; </p><p>&nbsp;</p>"
                 + "<p>Encuestas almacenadas: <span id='el_numalm'></span></p>"
                 + "<p>Encuestas no enviadas: <span id='el_numnoenv'></span></p>"
-                + "<p><button id='el_anterior'>Anterior</button>"
+                + "<p><button id='el_anterior'>Anterior no enviada</button>"
                 + "<span style='border: 1px solid #000000' id='el_idalm'>&nbsp;</span>"
                 + "<button id='el_siguiente'>Siguiente no enviada</button></p>"
-                + "<button id='el_resnoenviados'>Exportar resultados no enviados</button>"
+                + "<button id='el_resnoenviados'>Exportar encuestas no enviados</button>"
                 + "</div>");
         el_llena();
     }
@@ -319,8 +319,8 @@ $(document).ready(function() {
             $('input[name^="entry"').each(function (index) {
                 if ($(this).attr('type') == 'radio') {
                     tit[$(this).attr('name')] = $(this).closest('.ss-choices').attr('aria-label').trim();
-                } else {
-                    tit[$(this).attr('name')] = $(this).closest('.ss-q-title').text().trim();
+                } else if ($(this).attr('class') != 'ss-q-other') {
+                    tit[$(this).attr('name')] = $(this).parent().find('.ss-q-title').text().trim();
                 }
             });
             res += "<th>Timestamp</th>";
@@ -341,7 +341,11 @@ $(document).ready(function() {
                         for(var k in tit) {
                             res += "<td>";
                             if (k in ind) {
-                                res += ind[k];
+                                if (ind[k] == '__other_option__') {
+                                    res += ind[k + '.other_option_response'];
+                                } else {
+                                    res += ind[k];
+                                }
                             }
                             res += "</td>";
                         };
