@@ -279,7 +279,7 @@ $(document).ready(function() {
                 contenido: $('form').serialize(), 
                 url: $('form').attr('action'),
                 // Timestamp en locale usado por googledocs
-                timestamp: (h.getMonth()+1) + "-" + h.getDate() + "-" + 
+                timestamp: h.getDate() + "/" + (h.getMonth()+1) + "/" + 
                     h.getFullYear() + " " + h.getHours() + ":" + 
                     h.getMinutes() + ":" + h.getSeconds()
             };
@@ -313,17 +313,19 @@ $(document).ready(function() {
                 + "  <head><title>Resultados de " 
                 + $('title').html() + "</title></head>\n"
                 + "  <body>\n"
-                + "    <table border=1>\n"
+                + "    <table border='1' style='font-family: Arial; font-size: 8px;border-collapse:collapse;'>\n"
                 + "      <thead>";
             tit = {};
             $('input[name^="entry"').each(function (index) {
                 if ($(this).attr('type') == 'radio') {
-                    tit[$(this).attr('name')] = $(this).closest('.ss-choices').attr('aria-label').trim();
-                } else if ($(this).attr('class') != 'ss-q-other') {
-                    tit[$(this).attr('name')] = $(this).parent().find('.ss-q-title').text().trim();
+                    tit[$(this).attr('name')] = 
+                        $(this).closest('.ss-choices').attr('aria-label').trim();
+                } else if ($(this).attr('name').indexOf('other_option_response') < 0) {
+                    tit[$(this).attr('name')] = 
+                        $(this).parent().find('.ss-q-title').text().trim();
                 }
             });
-            res += "<th>Timestamp</th>";
+            res += "<th>Marca Temporal</th>";
             for(var k in tit) {
                 res += "<th>" + tit[k] + "</th>";
             }
