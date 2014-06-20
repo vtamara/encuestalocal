@@ -316,7 +316,7 @@ $(document).ready(function() {
                 + "    <table border='1' style='font-family: Arial; font-size: 8px;border-collapse:collapse;'>\n"
                 + "      <thead>";
             tit = {};
-            $('input[name^="entry"').each(function (index) {
+            $('input[name^="entry"]').each(function (index) {
                 if ($(this).attr('type') == 'radio') {
                     tit[$(this).attr('name')] = 
                         $(this).closest('.ss-choices').attr('aria-label').trim();
