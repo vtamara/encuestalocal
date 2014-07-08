@@ -28,6 +28,7 @@ $(document).ready(function() {
     var actual = null;
 
     var limpia_formulario = function() {
+        $('input:checkbox').attr('checked', false);
         $('input:radio').attr('checked', false);
         $("form").each(function() { this.reset(); });
     }
@@ -145,33 +146,16 @@ $(document).ready(function() {
        <input type="date" name="entry.2092848773" value="" class="ss-q-date valid" dir="auto" id="entry_2092848773" aria-label="Fecha de diligenciamiento  "> 
        entry.2092848773=2014-06-16
 
-      ecTexto:
+        Texto:
         <input type="text" name="entry.563383882.other_option_response" value="" class="ss-q-other" id="entry_563383882_other_option_response" dir="auto" aria-label="Other">
         entry.563383882.other_option_response=otra+7
 
+	Area de texto:
+	<textarea name="entry.354409088" rows="8" cols="0" class="ss-q-long valid" id="entry_354409088" dir="auto" aria-label="21. Observaciones y/o Sugerencias  "></textarea>
+
+	Cajas de verificacion:
+
         */
-    var presenta= function(contenido) {
-        // Limpiamos formulario
-        limpia_formulario();
-        //https://gist.github.com/brucekirkpatrick/7026682
-        var str = decodeURI(contenido.replace(/\+/g, ' ')); 
-        var pairs = str.split('&');
-        var obj = {}, p, idx;
-        for (var i = 0, n = pairs.length; i < n; i++) {
-            var p = pairs[i].split('=');
-            if ($('input:radio[name="' + p[0] + '"]').size() > 0) {
-                // Radio
-                $('input[name="' + p[0] + '"]').attr('checked', false);
-                var s='input[name="' + p[0] + '"][value="'
-                    + p[1] + '"]';
-                $(s).attr('checked', true);
-            } else if ($('input[name="' + p[0] + '"]').size() == 1) {
-                // Texto o fecha
-                $('input[name="' + p[0] + '"]').val(p[1]);
-            }
-        }
-        el_llena();
-    };
 
     /**
      * Itera sobre cada resultado de contenido y
@@ -187,15 +171,22 @@ $(document).ready(function() {
         for (var i = 0, n = pairs.length; i < n; i++) {
             var p = pairs[i].split('=');
             if ($('input:radio[name="' + p[0] + '"]').size() > 0) {
-                fradio(param, p[0], p[1]);
-            } else if ($('input[name="' + p[0] + '"]').size() == 1) {
+                fradio(param, p[0], p[1], true);
+            } else if ($('input:checkbox[name="' + p[0] + '"]').size() > 0) {
+                fradio(param, p[0], p[1], false);
+            } else if ($('input[name="' + p[0] + '"]').size() == 1 ||
+			$('textarea[name="' + p[0] + '"]').size() == 1) {
                 ftexto(param, p[0], p[1]);
             }
         }
     };
 
-    var fradio_llenaformulario = function(param, nombre, valor) {
-        $('input[name="' + nombre + '"]').attr('checked', false);
+    var fradio_llenaformulario = function(param, nombre, valor, limpia) {
+	if (limpia) {
+        	$('input[name="' + nombre + '"]').attr('checked', false);
+	} else {
+		debugger;
+	}
         var s='input[name="' + nombre + '"][value="'
             + valor + '"]';
         $(s).attr('checked', true);
@@ -203,6 +194,7 @@ $(document).ready(function() {
 
     var ftexto_llenaformulario = function(param, nombre, valor) {
         $('input[name="' + nombre + '"]').val(valor);
+        $('textarea[name="' + nombre + '"]').val(valor);
     };
 
     var fentrada_objeto = function(param, nombre, valor) {
@@ -316,7 +308,7 @@ $(document).ready(function() {
                 + "    <table border='1' style='font-family: Arial; font-size: 8px;border-collapse:collapse;'>\n"
                 + "      <thead>";
             tit = {};
-            $('input[name^="entry"').each(function (index) {
+            $('input[name^="entry"]').each(function (index) {
                 if ($(this).attr('type') == 'radio') {
                     tit[$(this).attr('name')] = 
                         $(this).closest('.ss-choices').attr('aria-label').trim();
