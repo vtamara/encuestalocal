@@ -2,6 +2,9 @@
 # encuestalocal
 # Convierte un formulario de Google Docs a versión con almacenamiento local
 # y envío cuando esté en línea.
+#
+# Cedido al dominio público de acuerdo a legislación colombiana
+# https://www.pasosdejesus.org/dominio_publico_colombia.html
 # 2014. vtamara@pasosdeJesus.org
 
 # En directorio con fuentes de este convertidor

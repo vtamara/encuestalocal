@@ -1,8 +1,10 @@
+// vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker fileencoding=utf-8:
 // Permite guardar resultados de un formulario/encuesta de Google Docs en 
 // base local y su posterior recuperación para ser enviados.
 //
+// Cedido al dominio público de acuerdo a legislación colombiana
+// https://www.pasosdejesus.org/dominio_publico_colombia.html
 // vtamara@pasosdeJesus.org 2014
-// vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker fileencoding=utf-8:
 
 //  Referencias:
 // * http://www.ibm.com/developerworks/web/library/wa-offlinehtml/index.html?ca=drs
